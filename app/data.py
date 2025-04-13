@@ -5,18 +5,22 @@ import pickle as pkl
 import os
 import matplotlib.pyplot as plt
 import base64
+from pathlib import Path
 
-# Loading model, scaler, and label encoder
-with open('/Users/devanshpratap28/Documents/Python VS Code/VridhaMitra/app/model.pkl', 'rb') as f:
+# Get the directory where the current script is located
+BASE_DIR = Path(__file__).parent
+
+# Loading model, scaler, and label encoder with relative paths
+with open(BASE_DIR / "model.pkl", 'rb') as f:
     model = pkl.load(f)
 
-with open('/Users/devanshpratap28/Documents/Python VS Code/VridhaMitra/app/scaler.pkl', 'rb') as f:
+with open(BASE_DIR / "scaler.pkl", 'rb') as f:
     scaler = pkl.load(f)
 
-with open('/Users/devanshpratap28/Documents/Python VS Code/VridhaMitra/app/label_encoder.pkl', 'rb') as f:
+with open(BASE_DIR / "label_encoder.pkl", 'rb') as f:
     label_encoder = pkl.load(f)
 
-ANNOTATED_DIR = "Annotated_Image"
+ANNOTATED_DIR = BASE_DIR / "Annotated_Image"
 os.makedirs(ANNOTATED_DIR, exist_ok=True)
 
 def detect_keypoints(image):
@@ -36,7 +40,7 @@ def detect_keypoints(image):
     return None
 
 def plot_keypoints(image, keypoints, label):
-    filename = os.path.join(ANNOTATED_DIR, "keypoints.png")
+    filename = ANNOTATED_DIR / "keypoints.png"
 
     plt.figure(figsize=(4, 6))
     plt.imshow(cv.cvtColor(image, cv.COLOR_BGR2RGB))
@@ -57,7 +61,7 @@ def plot_keypoints(image, keypoints, label):
     return encoded_image
 
 def predict_output(image_path):
-    img = cv.imread(image_path)
+    img = cv.imread(str(image_path))
 
     if img is None:
         return "", "Failed to load image"
